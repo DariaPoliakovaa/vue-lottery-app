@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
+import WinnersBlock from './components/WinnersBlock.vue'
 import RegistrationForm from './components/RegistrationForm.vue'
 import ParticipantsTable from './components/ParticipantsTable.vue'
 import SearchBar from './components/SearchBar.vue'
@@ -9,16 +10,40 @@ import AppButton from './components/ui/AppButton.vue'
 import type { Participant } from './types'
 
 const participants = ref<Participant[]>([])
-const STORAGE_KEY = 'lottery_participants'
+const winnerIds = ref<number[]>([]) 
+
+const STORAGE_KEY_USERS = 'lottery_participants'
+const STORAGE_KEY_WINNERS = 'lottery_winners'
 
 onMounted(() => {
-  const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved) { participants.value = JSON.parse(saved) }
+  const savedUsers = localStorage.getItem(STORAGE_KEY_USERS)
+  if (savedUsers) participants.value = JSON.parse(savedUsers)
+
+  const savedWinners = localStorage.getItem(STORAGE_KEY_WINNERS)
+  if (savedWinners) winnerIds.value = JSON.parse(savedWinners)
 })
 
 watch(participants, (newVal) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal))
+  localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(newVal))
 }, { deep: true })
+
+watch(winnerIds, (newVal) => {
+  localStorage.setItem(STORAGE_KEY_WINNERS, JSON.stringify(newVal))
+}, { deep: true })
+
+const currentWinners = computed(() => {
+  return winnerIds.value
+    .map(id => participants.value.find(p => p.id === id))
+    .filter(p => p !== undefined) as Participant[]
+})
+
+const handleAddWinner = (winner: Participant) => {
+  winnerIds.value.push(winner.id)
+}
+
+const handleRemoveWinner = (winnerId: number) => {
+  winnerIds.value = winnerIds.value.filter(id => id !== winnerId)
+}
 
 const existingEmails = computed(() => participants.value.map(p => p.email))
 
@@ -74,7 +99,9 @@ const openDeleteModal = (participant: Participant) => {
 
 const confirmDelete = () => {
   if (participantToDelete.value) {
-    participants.value = participants.value.filter(p => p.id !== participantToDelete.value!.id)
+    const idToDelete = participantToDelete.value.id
+    participants.value = participants.value.filter(p => p.id !== idToDelete)
+    winnerIds.value = winnerIds.value.filter(id => id !== idToDelete)
   }
   isDeleteModalOpen.value = false
   participantToDelete.value = null
@@ -102,6 +129,15 @@ const saveEdit = (updatedParticipant: Participant) => {
   <div class="min-h-screen py-10 px-4">
     <div class="max-w-4xl mx-auto space-y-8">
       
+      <h1 class="text-3xl font-bold text-center text-primary mb-8">Vue Lottery App</h1>
+      
+      <WinnersBlock 
+        :participants="participants"
+        :winners="currentWinners"
+        @add-winner="handleAddWinner"
+        @remove-winner="handleRemoveWinner"
+      />
+
       <RegistrationForm :existing-emails="existingEmails" @add-participant="handleAddParticipant" />
 
       <div>
@@ -119,26 +155,17 @@ const saveEdit = (updatedParticipant: Participant) => {
       
     </div>
 
-    <AppModal 
-      :is-open="isDeleteModalOpen" 
-      title="Підтвердження видалення" 
-      @close="isDeleteModalOpen = false"
-    >
+    <AppModal :is-open="isDeleteModalOpen" title="Підтвердження видалення" @close="isDeleteModalOpen = false">
       <p v-if="participantToDelete" class="text-gray-600">
         Ви дійсно бажаєте видалити учасника <strong>{{ participantToDelete.name }}</strong>, {{ participantToDelete.email }}?
       </p>
-      
       <template #footer>
         <AppButton variant="secondary" @click="isDeleteModalOpen = false">Ні</AppButton>
         <AppButton variant="danger" @click="confirmDelete">Так</AppButton>
       </template>
     </AppModal>
 
-    <AppModal 
-      :is-open="isEditModalOpen" 
-      title="Редагувати дані" 
-      @close="isEditModalOpen = false"
-    >
+    <AppModal :is-open="isEditModalOpen" title="Редагувати дані" @close="isEditModalOpen = false">
       <EditParticipantForm 
         v-if="participantToEdit"
         :participant="participantToEdit"
