@@ -9,6 +9,8 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'sort', key: 'name' | 'dob'): void
+  (e: 'edit', participant: Participant): void
+  (e: 'delete', participant: Participant): void
 }>()
 
 const formatDate = (dateString: string) => {
@@ -25,48 +27,31 @@ const formatDate = (dateString: string) => {
         <thead class="bg-gray-50 text-gray-800 font-bold border-b border-gray-100 select-none">
           <tr>
             <th class="px-6 py-4">#</th>
-            
-            <th 
-              class="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors"
-              @click="emit('sort', 'name')"
-            >
-              Name 
-              <span v-if="sortKey === 'name'" class="ml-1 text-primary">
-                {{ sortOrder === 'asc' ? '↓' : '↑' }}
-              </span>
+            <th class="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" @click="emit('sort', 'name')">
+              Name <span v-if="sortKey === 'name'" class="ml-1 text-primary">{{ sortOrder === 'asc' ? '↓' : '↑' }}</span>
             </th>
-            
-            <th 
-              class="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors"
-              @click="emit('sort', 'dob')"
-            >
-              Date of Birth 
-              <span v-if="sortKey === 'dob'" class="ml-1 text-primary">
-                {{ sortOrder === 'asc' ? '↓' : '↑' }}
-              </span>
+            <th class="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" @click="emit('sort', 'dob')">
+              Date of Birth <span v-if="sortKey === 'dob'" class="ml-1 text-primary">{{ sortOrder === 'asc' ? '↓' : '↑' }}</span>
             </th>
-            
             <th class="px-6 py-4">Email</th>
             <th class="px-6 py-4">Phone number</th>
+            <th class="px-6 py-4">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="participants.length === 0">
-            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
-              Список учасників пустий або нічого не знайдено
-            </td>
+            <td colspan="6" class="px-6 py-8 text-center text-gray-500">Список учасників пустий або нічого не знайдено</td>
           </tr>
-          
-          <tr 
-            v-for="(participant, index) in participants" 
-            :key="participant.id"
-            class="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
-          >
+          <tr v-for="(participant, index) in participants" :key="participant.id" class="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
             <td class="px-6 py-4 text-gray-400">{{ index + 1 }}</td>
             <td class="px-6 py-4">{{ participant.name }}</td>
             <td class="px-6 py-4">{{ formatDate(participant.dob) }}</td>
             <td class="px-6 py-4">{{ participant.email }}</td>
             <td class="px-6 py-4">{{ participant.phone }}</td>
+            <td class="px-6 py-4 flex gap-3">
+              <button @click="emit('edit', participant)" class="text-primary hover:underline font-semibold">Edit</button>
+              <button @click="emit('delete', participant)" class="text-red-500 hover:underline font-semibold">Delete</button>
+            </td>
           </tr>
         </tbody>
       </table>
