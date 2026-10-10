@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +17,7 @@ const router = createRouter({
         {
       path: '/users',
       name: 'users',
+      meta: { requiresAuth: true },
       component: () => import('@/views/UsersView.vue'),
       children: [
         {
@@ -47,6 +49,18 @@ const router = createRouter({
       component: () => import('@/views/NotFoundView.vue')
     }
   ]
+})
+
+router.beforeEach((to) => {
+  const authStore = useAuthStore()
+  
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    return { name: 'login', query: { redirect: to.fullPath } }
+  }
+  
+  if (to.name === 'login' && authStore.isAuthenticated) {
+    return { name: 'users' }
+  }
 })
 
 export default router
