@@ -6,8 +6,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      // Ліниве завантаження (Async Component) - компонент завантажується лише при переході на цей маршрут
       component: () => import('@/views/HomeView.vue')
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('@/views/AboutView.vue')
     }
   ]
 })

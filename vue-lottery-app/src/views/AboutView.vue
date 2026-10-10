@@ -1,0 +1,28 @@
+<script setup lang="ts">
+</script>
+
+<template>
+  <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+    <h1 class="text-3xl font-bold text-gray-800 mb-1">Дарія Полякова</h1>
+    <p class="text-gray-500 mb-8 font-medium">Студентка</p>
+
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Technical Skills</h2>
+    
+    <div class="flex flex-wrap gap-2 mb-8">
+      <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-semibold">Vue 3 (Composition API)</span>
+      <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-semibold">TypeScript</span>
+      <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-semibold">Tailwind CSS & SCSS</span>
+      <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-semibold">Figma (UI/UX)</span>
+      <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-semibold">Software Testing</span>
+      <span class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-semibold">Git</span>
+    </div>
+
+    <a 
+      href="https://github.com/DariaPoliakovaa" 
+      target="_blank" 
+      class="inline-flex items-center gap-2 text-primary font-semibold hover:text-primary-hover transition-colors"
+    >
+      Мій профіль GitHub &rarr;
+    </a>
+  </div>
+</template>
