@@ -7,7 +7,7 @@ import SearchBar from './components/SearchBar.vue'
 import AppModal from './components/ui/AppModal.vue'
 import EditParticipantForm from './components/EditParticipantForm.vue'
 import AppButton from './components/ui/AppButton.vue'
-import type { Participant } from './types'
+import type { Participant } from './types/participant.ts'
 
 const participants = ref<Participant[]>([])
 const winnerIds = ref<number[]>([]) 

@@ -2,7 +2,7 @@
 import { reactive, onMounted } from 'vue'
 import AppInput from './ui/AppInput.vue'
 import AppButton from './ui/AppButton.vue'
-import type { Participant } from '../types'
+import type { Participant } from '../types/participant.ts'
 
 const props = defineProps<{
   participant: Participant
