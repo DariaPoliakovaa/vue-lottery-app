@@ -40,6 +40,30 @@ const fetchUsers = async () => {
   }
 }
 
+const handleUserSaved = (savedUser: User, isNew: boolean) => {
+  if (isNew) {
+    users.value.unshift(savedUser)
+    totalUsers.value++
+  } else {
+    const index = users.value.findIndex(u => u.id === savedUser.id)
+    if (index !== -1) {
+      users.value[index] = savedUser
+    }
+  }
+}
+
+const deleteUser = async (id: number) => {
+  if (!confirm('Ви впевнені, що хочете видалити цього користувача?')) return
+  
+  try {
+    await ServiceProvider.users.delete(id)
+    users.value = users.value.filter(u => u.id !== id)
+    totalUsers.value--
+  } catch (err) {
+    alert('Помилка видалення')
+  }
+}
+
 const updateUrl = () => {
   router.push({
     path: '/users',
@@ -50,7 +74,6 @@ const updateUrl = () => {
   })
 }
 
-// Пагінація
 const nextPage = () => {
   if (currentPage.value * limit < totalUsers.value) {
     currentPage.value++
@@ -77,12 +100,15 @@ const handleSearch = (newValue: string | number | undefined) => {
 
 watch(
   () => route.query,
-  (newQuery) => {
-    currentPage.value = Number(newQuery.page) || 1
-    searchQuery.value = (newQuery.q as string) || ''
-    fetchUsers()
+  (newQuery, oldQuery) => {
+    if (newQuery.page !== oldQuery?.page || newQuery.q !== oldQuery?.q) {
+      currentPage.value = Number(newQuery.page) || 1
+      searchQuery.value = (newQuery.q as string) || ''
+      fetchUsers()
+    }
   }
 )
+
 
 onMounted(fetchUsers)
 </script>
@@ -130,6 +156,7 @@ onMounted(fetchUsers)
             <td class="px-4 py-3 text-right flex justify-end gap-3">
               <RouterLink :to="`/users/${user.id}`" class="text-primary hover:underline">Деталі</RouterLink>
               <RouterLink :to="`/users/${user.id}/edit`" class="text-gray-500 hover:underline">Редагувати</RouterLink>
+              <button @click="deleteUser(user.id)" class="text-red-500 hover:underline">Видалити</button>
             </td>
           </tr>
         </tbody>
@@ -152,5 +179,6 @@ onMounted(fetchUsers)
         </AppButton>
       </div>
     </div>
+    <RouterView @user-saved="handleUserSaved" />
   </div>
 </template>

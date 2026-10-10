@@ -13,16 +13,33 @@ const router = createRouter({
       name: 'about',
       component: () => import('@/views/AboutView.vue')
     },
-    {
+        {
       path: '/users',
       name: 'users',
-      component: () => import('@/views/UsersView.vue')
+      component: () => import('@/views/UsersView.vue'),
+      children: [
+        {
+          path: 'create',
+          name: 'user-create',
+          component: () => import('@/views/UserFormView.vue')
+        },
+        {
+          path: ':id/edit',
+          name: 'user-edit',
+          component: () => import('@/views/UserFormView.vue')
+        }
+      ]
     },
     {
       path: '/users/:id',
       name: 'user-details',
       component: () => import('@/views/UserDetailsView.vue'),
       props: true
+    },
+        {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView.vue')
     },
     {
       path: '/:pathMatch(.*)*',
