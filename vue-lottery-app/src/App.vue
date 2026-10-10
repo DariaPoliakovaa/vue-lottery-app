@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { RouterView, RouterLink } from 'vue-router'
+import { RouterView } from 'vue-router'
+import AppHeader from './components/AppHeader.vue'
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <nav class="bg-white shadow-sm p-4 mb-4 flex gap-4">
-      <RouterLink to="/" class="text-primary hover:underline font-bold">Home</RouterLink>
-    </nav>
-
-    <RouterView />
+    <AppHeader />
+    
+    <main class="max-w-5xl mx-auto px-4 py-8">
+      <RouterView />
+    </main>
   </div>
 </template>
