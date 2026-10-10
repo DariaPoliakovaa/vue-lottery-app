@@ -3,31 +3,35 @@ import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
+    routes: [
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue')
+      component: () => import('@/views/HomeView.vue'),
+      meta: { title: 'Головна | Vue Lottery' }
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/views/AboutView.vue')
+      component: () => import('@/views/AboutView.vue'),
+      meta: { title: 'Про автора | Vue Lottery' }
     },
-        {
+    {
       path: '/users',
       name: 'users',
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, title: 'Користувачі | Vue Lottery' },
       component: () => import('@/views/UsersView.vue'),
       children: [
         {
           path: 'create',
           name: 'user-create',
+          meta: { title: 'Створення користувача | Vue Lottery' },
           component: () => import('@/views/UserFormView.vue')
         },
         {
           path: ':id/edit',
           name: 'user-edit',
+          meta: { title: 'Редагування користувача | Vue Lottery' },
           component: () => import('@/views/UserFormView.vue')
         }
       ]
@@ -35,23 +39,27 @@ const router = createRouter({
     {
       path: '/users/:id',
       name: 'user-details',
+      meta: { requiresAuth: true, title: 'Деталі користувача | Vue Lottery' },
       component: () => import('@/views/UserDetailsView.vue'),
       props: true
     },
-        {
+    {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue')
+      component: () => import('@/views/LoginView.vue'),
+      meta: { title: 'Вхід | Vue Lottery', layout: 'AuthLayout' }
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: () => import('@/views/NotFoundView.vue')
+      component: () => import('@/views/NotFoundView.vue'),
+      meta: { title: '404 | Сторінку не знайдено' }
     }
   ]
 })
 
 router.beforeEach((to) => {
+  document.title = (to.meta.title as string) || 'Vue Lottery App'
   const authStore = useAuthStore()
   
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
