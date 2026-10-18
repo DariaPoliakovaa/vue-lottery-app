@@ -1,6 +1,6 @@
-import { http } from '@/shared/api/http-client'
+import { http } from '@/shared/api'
 import type { User, CreateUserDto, UpdateUserDto } from '@/entities/user/model/user'
-import type { Readable, Creatable, Editable, Deletable } from '../../../shared/api/interfaces'
+import type { Readable, Creatable, Editable, Deletable } from '@/shared/api'
 
 interface UsersResponse {
   users: User[];

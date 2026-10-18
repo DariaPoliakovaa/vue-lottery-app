@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Participant } from '@/entities/user/model/participant';
+import type { Participant } from '@/entities/user';
 
 defineProps<{
   participants: Participant[]

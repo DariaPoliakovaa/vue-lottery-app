@@ -1,1 +1,1 @@
-export { default as UserFormView } from './UserFormView.vue'
+export { default as UserFormView } from './ui/UserFormView.vue'

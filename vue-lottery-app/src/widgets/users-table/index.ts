@@ -1,3 +1,3 @@
-export { default as ParticipantsTable } from './ParticipantsTable.vue'
-export { default as SearchBar } from './SearchBar.vue'
-export { default as WinnersBlock } from './WinnersBlock.vue'
+export { default as ParticipantsTable } from './ui/ParticipantsTable.vue'
+export { default as SearchBar } from './ui/SearchBar.vue'
+export { default as WinnersBlock } from './ui/WinnersBlock.vue'

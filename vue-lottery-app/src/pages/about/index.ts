@@ -1,1 +1,1 @@
-export { default as AboutView } from './AboutView.vue'
+export { default as AboutView } from './ui/AboutView.vue'

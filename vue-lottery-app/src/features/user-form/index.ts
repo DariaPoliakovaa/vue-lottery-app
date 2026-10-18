@@ -1,2 +1,2 @@
-export { default as RegistrationForm } from './RegistrationForm.vue' // або твої реальні компоненти форм
-export { default as EditParticipantForm } from './EditParticipantForm.vue'
+export { default as RegistrationForm } from './ui/RegistrationForm.vue'
+export { default as EditParticipantForm } from './ui/EditParticipantForm.vue'

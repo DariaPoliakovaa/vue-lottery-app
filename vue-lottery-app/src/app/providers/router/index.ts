@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/entities/session/model/auth'
+import { useAuthStore } from '@/entities/session'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,38 +7,38 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/pages/home/HomeView.vue'),
+      component: () => import('@/pages/home/ui/HomeView.vue'),
       meta: { title: 'Головна | Vue Lottery' }
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/pages/about/AboutView.vue'),
+      component: () => import('@/pages/about/ui/AboutView.vue'),
       meta: { title: 'Про автора | Vue Lottery' }
     },
         {
       path: '/lottery',
       name: 'lottery',
-      component: () => import('@/pages/lottery/LotteryView.vue'),
+      component: () => import('@/pages/lottery/ui/LotteryView.vue'),
       meta: { title: 'Лотерея | Vue Lottery', requiresAuth: true }
     },
     {
       path: '/users',
       name: 'users',
       meta: { requiresAuth: true, title: 'Користувачі | Vue Lottery' },
-      component: () => import('@/pages/users/UsersView.vue'),
+      component: () => import('@/pages/users/ui/UsersView.vue'),
       children: [
         {
           path: 'create',
           name: 'user-create',
           meta: { title: 'Створення користувача | Vue Lottery' },
-          component: () => import('@/pages/user-form/UserFormView.vue')
+          component: () => import('@/pages/user-form/ui/UserFormView.vue')
         },
         {
           path: ':id/edit',
           name: 'user-edit',
           meta: { title: 'Редагування користувача | Vue Lottery' },
-          component: () => import('@/pages/user-form/UserFormView.vue')
+          component: () => import('@/pages/user-form/ui/UserFormView.vue')
         }
       ]
     },
@@ -46,19 +46,19 @@ const router = createRouter({
       path: '/users/:id',
       name: 'user-details',
       meta: { requiresAuth: true, title: 'Деталі користувача | Vue Lottery' },
-      component: () => import('@/pages/user-details/UserDetailsView.vue'),
+      component: () => import('@/pages/user-details/ui/UserDetailsView.vue'),
       props: true
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/pages/login/LoginView.vue'),
+      component: () => import('@/pages/login/ui/LoginView.vue'),
       meta: { title: 'Вхід | Vue Lottery', layout: 'AuthLayout' }
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: () => import('@/pages/not-found/NotFoundView.vue'),
+      component: () => import('@/pages/not-found/ui/NotFoundView.vue'),
       meta: { title: '404 | Сторінку не знайдено' }
     }
   ]

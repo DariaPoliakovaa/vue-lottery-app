@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { useAuthStore } from '@/entities/session/model/auth'
+import { useAuthStore } from '@/entities/session';
 
 const authStore = useAuthStore()
 </script>

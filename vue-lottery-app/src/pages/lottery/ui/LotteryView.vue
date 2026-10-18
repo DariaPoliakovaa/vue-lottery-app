@@ -1,21 +1,29 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
-import { ServiceProvider } from '@/shared/api/service-provider'
-import type { UserService } from '@/entities/user'
-import type { Participant } from '@/entities/user/model/participant'
-import WinnersBlock from '@/widgets/users-table/WinnersBlock.vue'
-import SearchBar from '@/widgets/users-table/SearchBar.vue'
-import ParticipantsTable from '@/widgets/users-table/ParticipantsTable.vue'
+import { storeToRefs } from 'pinia'
+import { useUsersStore } from '@/entities/user'
+import type { Participant } from '@/entities/user'
+import { WinnersBlock } from '@/widgets/users-table'
+import { SearchBar } from '@/widgets/users-table'
+import { ParticipantsTable } from '@/widgets/users-table'
 import AppModal from '@/shared/ui/AppModal.vue'
-import EditParticipantForm from '@/features/user-form/EditParticipantForm.vue'
+import { EditParticipantForm } from '@/features/user-form'
 import AppButton from '@/shared/ui/AppButton.vue'
 
-const userService = ServiceProvider.get<UserService>('users')
-const participants = ref<Participant[]>([])
-const isLoading = ref(false)
-const error = ref<string | null>(null)
-const winnerIds = ref<number[]>([])
+const usersStore = useUsersStore()
+const { users: storeUsers, isLoading, error } = storeToRefs(usersStore)
 
+const participants = computed<Participant[]>(() => {
+  return storeUsers.value.map(user => ({
+    id: user.id,
+    name: `${user.firstName} ${user.lastName}`,
+    email: user.email,
+    phone: user.phone || '+380000000000',
+    dob: '2000-01-01'
+  }))
+})
+
+const winnerIds = ref<number[]>([])
 const STORAGE_KEY_WINNERS = 'lottery_winners'
 
 onMounted(async () => {
@@ -24,22 +32,7 @@ onMounted(async () => {
     winnerIds.value = JSON.parse(savedWinners)
   }
 
-  isLoading.value = true
-  try {
-    const response = await userService.getAll({ limit: 15 })
-    
-    participants.value = response.items.map(user => ({
-      id: user.id,
-      name: `${user.firstName} ${user.lastName}`,
-      email: user.email,
-      phone: user.phone || '+380000000000',
-      dob: '2000-01-01'
-    }))
-  } catch (err) {
-    error.value = 'Не вдалося завантажити учасників з сервера'
-  } finally {
-    isLoading.value = false
-  }
+  await usersStore.fetchUsers({ limit: 15 })
 })
 
 watch(winnerIds, (newVal) => {
@@ -113,7 +106,7 @@ const openDeleteModal = (participant: Participant) => {
 const confirmDelete = () => {
   if (participantToDelete.value) {
     const idToDelete = participantToDelete.value.id
-    participants.value = participants.value.filter(p => p.id !== idToDelete)
+    usersStore.removeUser(idToDelete)
     winnerIds.value = winnerIds.value.filter(id => id !== idToDelete)
   }
   isDeleteModalOpen.value = false
@@ -129,10 +122,6 @@ const openEditModal = (participant: Participant) => {
 }
 
 const saveEdit = (updatedParticipant: Participant) => {
-  const index = participants.value.findIndex(p => p.id === updatedParticipant.id)
-  if (index !== -1) {
-    participants.value[index] = updatedParticipant
-  }
   isEditModalOpen.value = false
   participantToEdit.value = null
 }

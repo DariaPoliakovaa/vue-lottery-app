@@ -2,7 +2,7 @@
 import { reactive, onMounted } from 'vue'
 import AppInput from '@/shared/ui/AppInput.vue';
 import AppButton from '@/shared/ui/AppButton.vue';
-import type { Participant } from '../../entities/user/model/participant.ts'
+import type { Participant } from '@/entities/user'
 
 const props = defineProps<{
   participant: Participant

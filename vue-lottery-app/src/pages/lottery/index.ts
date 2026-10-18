@@ -1,1 +1,1 @@
-export { default as LotteryView } from './LotteryView.vue'
+export { default as LotteryView } from './ui/LotteryView.vue'

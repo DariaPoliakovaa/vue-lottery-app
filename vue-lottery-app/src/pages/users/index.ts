@@ -1,1 +1,1 @@
-export { default as UsersView } from './UsersView.vue'
+export { default as UsersView } from './ui/UsersView.vue'
