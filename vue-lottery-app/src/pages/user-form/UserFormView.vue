@@ -3,13 +3,12 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
-import { ServiceProvider } from '@/shared/api/service-provider'
-import type { UserService } from '@/entities/user'
+import { useUsersStore } from '@/entities/user'
 import AppInput from '@/shared/ui/AppInput.vue'
 import AppButton from '@/shared/ui/AppButton.vue'
-import type { User, CreateUserDto } from '@/entities/user/model/user'
+import type { CreateUserDto } from '@/entities/user'
 
-const userService = ServiceProvider.get<UserService>('users')
+const usersStore = useUsersStore()
 const route = useRoute()
 const router = useRouter()
 const isEditMode = ref(false)
@@ -45,24 +44,23 @@ const { value: age, errorMessage: ageError } = useField<number>('age')
 const { value: gender, errorMessage: genderError } = useField<string>('gender', { initialValue: 'male' })
 const { value: phone, errorMessage: phoneError } = useField<string>('phone')
 
-const emit = defineEmits<{
-  (e: 'user-saved', user: User, isNew: boolean): void
-}>()
-
 onMounted(async () => {
   if (isEditMode.value && userId.value) {
     try {
-      const user = await userService.getById(userId.value)
-      setValues({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        email: user.email,
-        password: user.password || '',
-        age: user.age,
-        gender: user.gender,
-        phone: user.phone
-      })
+      await usersStore.fetchUser(userId.value)
+      const user = usersStore.currentUser
+      if (user) {
+        setValues({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          username: user.username,
+          email: user.email,
+          password: user.password || '',
+          age: user.age,
+          gender: user.gender,
+          phone: user.phone
+        })
+      }
     } catch (e) {
       alert('Помилка завантаження користувача')
       router.back()
@@ -73,15 +71,10 @@ onMounted(async () => {
 const onSubmit = handleSubmit(async (values) => {
   isLoading.value = true
   try {
-    let savedUser: User
-    
     if (isEditMode.value && userId.value) {
-      savedUser = await userService.update(userId.value, values)
-      emit('user-saved', savedUser, false)
+      await usersStore.updateUser(userId.value, values)
     } else {
-      savedUser = await userService.create(values)
-      savedUser.id = Math.floor(Math.random() * 1000) + 300
-      emit('user-saved', savedUser, true)
+      await usersStore.createUser(values)
     }
     
     router.push('/users')

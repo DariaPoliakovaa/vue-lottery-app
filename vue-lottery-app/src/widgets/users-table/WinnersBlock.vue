@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppButton from '../shared/ui/AppButton.vue/index.js'
-import type { Participant } from '../entities/user/model/participant.ts'
+import AppButton from '@/shared/ui/AppButton.vue';
+import type { Participant } from '@/entities/user';
 
 const props = defineProps<{
   participants: Participant[]

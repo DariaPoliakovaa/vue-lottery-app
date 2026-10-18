@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
-import { ServiceProvider } from '@/shared/api/service-provider'
-import type { UserService } from '@/entities/user'
-import type { User } from '@/entities/user'
+import { storeToRefs } from 'pinia'
+import { useUsersStore } from '@/entities/user'
 import AppButton from '@/shared/ui/AppButton.vue'
 import AppInput from '@/shared/ui/AppInput.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const userService = ServiceProvider.get<UserService>('users')
-const users = ref<User[]>([])
-const isLoading = ref(false)
-const error = ref<string | null>(null)
+const usersStore = useUsersStore()
+const { users, isLoading, error } = storeToRefs(usersStore)
+
 const totalUsers = ref(0)
 const limit = 10
 
@@ -22,45 +20,19 @@ const searchQuery = ref((route.query.q as string) || '')
 let searchTimeout: ReturnType<typeof setTimeout>
 
 const fetchUsers = async () => {
-  isLoading.value = true
-  error.value = null
-  
-  try {
-    const skip = (currentPage.value - 1) * limit
-    const response = await userService.getAll({ 
-      limit, 
-      skip, 
-      q: searchQuery.value 
-    })
-    
-    users.value = response.items
-    totalUsers.value = response.total
-  } catch (err) {
-    error.value = (err as Error).message
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const handleUserSaved = (savedUser: User, isNew: boolean) => {
-  if (isNew) {
-    users.value.unshift(savedUser)
-    totalUsers.value++
-  } else {
-    const index = users.value.findIndex(u => u.id === savedUser.id)
-    if (index !== -1) {
-      users.value[index] = savedUser
-    }
-  }
+  const skip = (currentPage.value - 1) * limit
+  await usersStore.fetchUsers({ 
+    limit, 
+    skip, 
+    q: searchQuery.value 
+  })
 }
 
 const deleteUser = async (id: number) => {
   if (!confirm('Ви впевнені, що хочете видалити цього користувача?')) return
   
   try {
-    await userService.delete(id)
-    users.value = users.value.filter(u => u.id !== id)
-    totalUsers.value--
+    await usersStore.removeUser(id)
   } catch (err) {
     alert('Помилка видалення')
   }
@@ -110,7 +82,6 @@ watch(
     }
   }
 )
-
 
 onMounted(fetchUsers)
 </script>
@@ -167,7 +138,7 @@ onMounted(fetchUsers)
 
     <div class="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
       <p class="text-sm text-gray-500">
-        Всього: {{ totalUsers }}
+        Всього: {{ users.length }}
       </p>
       <div class="flex gap-2">
         <AppButton variant="secondary" :disabled="currentPage === 1 || isLoading" @click="prevPage">
@@ -176,11 +147,11 @@ onMounted(fetchUsers)
         <div class="px-4 py-2 text-sm font-medium border rounded-md">
           {{ currentPage }}
         </div>
-        <AppButton variant="secondary" :disabled="(currentPage * limit) >= totalUsers || isLoading" @click="nextPage">
+        <AppButton variant="secondary" :disabled="isLoading" @click="nextPage">
           Наступна
         </AppButton>
       </div>
     </div>
-    <RouterView @user-saved="handleUserSaved" />
+    <RouterView />
   </div>
 </template>

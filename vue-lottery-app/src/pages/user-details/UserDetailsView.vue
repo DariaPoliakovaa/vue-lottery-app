@@ -1,29 +1,20 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ServiceProvider } from '@/shared/api/service-provider'
-import type { UserService } from '@/entities/user'
-import type { User } from '@/entities/user/model/user'
+import { storeToRefs } from 'pinia'
+import { useUsersStore } from '@/entities/user'
 import AppButton from '@/shared/ui/AppButton.vue'
 
 const props = defineProps<{
   id: string
 }>()
 
-const userService = ServiceProvider.get<UserService>('users')
 const router = useRouter()
-const user = ref<User | null>(null)
-const isLoading = ref(true)
-const error = ref<string | null>(null)
+const usersStore = useUsersStore()
+const { currentUser: user, isLoading, error } = storeToRefs(usersStore)
 
 onMounted(async () => {
-  try {
-    user.value = await userService.getById(Number(props.id))
-  } catch (err) {
-    error.value = 'Не вдалося завантажити дані користувача'
-  } finally {
-    isLoading.value = false
-  }
+  await usersStore.fetchUser(props.id)
 })
 </script>
 

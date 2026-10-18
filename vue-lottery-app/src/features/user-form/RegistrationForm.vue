@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import AppInput from '../shared/ui/AppInput.vue'
-import AppButton from '../shared/ui/AppButton.vue/index.js'
+import AppInput from '@/shared/ui/AppInput.vue';
+import AppButton from '@/shared/ui/AppButton.vue';
 
 const props = defineProps<{
   existingEmails: string[]
