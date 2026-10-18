@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
-import WinnersBlock from './components/WinnersBlock.vue'
-import RegistrationForm from './components/RegistrationForm.vue'
-import ParticipantsTable from './components/ParticipantsTable.vue'
-import SearchBar from './components/SearchBar.vue'
-import AppModal from './components/ui/AppModal.vue'
-import EditParticipantForm from './components/EditParticipantForm.vue'
-import AppButton from './components/ui/AppButton.vue'
-import type { Participant } from './types/participant.ts'
+import WinnersBlock from './widgets/users-table/WinnersBlock.vue'
+import RegistrationForm from './features/user-form/RegistrationForm.vue'
+import ParticipantsTable from './widgets/users-table/ParticipantsTable.vue'
+import SearchBar from './widgets/users-table/SearchBar.vue'
+import AppModal from './shared/ui/AppModal.vue'
+import EditParticipantForm from './features/user-form/EditParticipantForm.vue'
+import AppButton from './shared/ui/AppButton.vue'
+import type { Participant } from './entities/user/model/participant.ts'
 
 const participants = ref<Participant[]>([])
 const winnerIds = ref<number[]>([]) 
