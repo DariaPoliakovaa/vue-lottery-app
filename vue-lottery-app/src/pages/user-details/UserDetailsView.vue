@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ServiceProvider } from '@/shared/api/service-provider'
+import type { UserService } from '@/entities/user'
 import type { User } from '@/entities/user/model/user'
 import AppButton from '@/shared/ui/AppButton.vue'
 
@@ -9,6 +10,7 @@ const props = defineProps<{
   id: string
 }>()
 
+const userService = ServiceProvider.get<UserService>('users')
 const router = useRouter()
 const user = ref<User | null>(null)
 const isLoading = ref(true)
@@ -16,7 +18,7 @@ const error = ref<string | null>(null)
 
 onMounted(async () => {
   try {
-    user.value = await ServiceProvider.users.getById(Number(props.id))
+    user.value = await userService.getById(Number(props.id))
   } catch (err) {
     error.value = 'Не вдалося завантажити дані користувача'
   } finally {

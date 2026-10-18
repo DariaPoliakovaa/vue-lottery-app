@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import { ServiceProvider } from '@/shared/api/service-provider'
+import type { UserService } from '@/entities/user'
 import type { Participant } from '@/entities/user/model/participant'
 import WinnersBlock from '@/widgets/users-table/WinnersBlock.vue'
 import SearchBar from '@/widgets/users-table/SearchBar.vue'
@@ -9,6 +10,7 @@ import AppModal from '@/shared/ui/AppModal.vue'
 import EditParticipantForm from '@/features/user-form/EditParticipantForm.vue'
 import AppButton from '@/shared/ui/AppButton.vue'
 
+const userService = ServiceProvider.get<UserService>('users')
 const participants = ref<Participant[]>([])
 const isLoading = ref(false)
 const error = ref<string | null>(null)
@@ -24,7 +26,7 @@ onMounted(async () => {
 
   isLoading.value = true
   try {
-    const response = await ServiceProvider.users.getAll({ limit: 15 })
+    const response = await userService.getAll({ limit: 15 })
     
     participants.value = response.items.map(user => ({
       id: user.id,

@@ -2,13 +2,15 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { ServiceProvider } from '@/shared/api/service-provider'
-import type { User } from '@/entities/user/model/user'
+import type { UserService } from '@/entities/user'
+import type { User } from '@/entities/user'
 import AppButton from '@/shared/ui/AppButton.vue'
 import AppInput from '@/shared/ui/AppInput.vue'
 
 const route = useRoute()
 const router = useRouter()
 
+const userService = ServiceProvider.get<UserService>('users')
 const users = ref<User[]>([])
 const isLoading = ref(false)
 const error = ref<string | null>(null)
@@ -25,7 +27,7 @@ const fetchUsers = async () => {
   
   try {
     const skip = (currentPage.value - 1) * limit
-    const response = await ServiceProvider.users.getAll({ 
+    const response = await userService.getAll({ 
       limit, 
       skip, 
       q: searchQuery.value 
@@ -56,7 +58,7 @@ const deleteUser = async (id: number) => {
   if (!confirm('Ви впевнені, що хочете видалити цього користувача?')) return
   
   try {
-    await ServiceProvider.users.delete(id)
+    await userService.delete(id)
     users.value = users.value.filter(u => u.id !== id)
     totalUsers.value--
   } catch (err) {
