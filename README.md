@@ -1,31 +1,18 @@
 ## Архітектура проєкту (Feature-Sliced Design)
 
-Проєкт побудовано відповідно до суворих правил FSD-методології, де залежності спрямовані виключно зверху вниз (шари вищого рівня можуть імпортувати компоненти нижчих шарів, але не навпаки).
+Проєкт побудовано відповідно до суворих правил FSD-методології, де залежності спрямовані виключно зверху вниз.
 
 ```mermaid
 graph TD
-    subgraph App Layer ["app (Ініціалізація, роутер, глобальні стилі)"]
-        direction TB
-    end
+    App["App (Ініціалізація, Роутер, Стилі)"] --> Pages["Pages (Сторінки додатку)"]
+    Pages --> Widgets["Widgets (Комбіновані блоки)"]
+    Widgets --> Features["Features (Бізнес-процеси)"]
+    Features --> Entities["Entities (Моделі та Стори)"]
+    Entities --> Shared["Shared (UI-компоненти, API, Утиліти)"]
 
-    subgraph Pages Layer ["pages (Сторінки: Home, Users, Lottery, Login тощо)"]
-        direction TB
-    end
-
-    subgraph Widgets Layer ["widgets (Комбіновані блоки: AppHeader, WinnersBlock, ParticipantsTable)"]
-        direction TB
-    end
-
-    subgraph Features Layer ["features (Бізнес-процеси: EditParticipantForm тощо)"]
-        direction TB
-    end
-
-    subgraph Entities / Shared ["entities & shared (Моделі користувачів, Pinia-стори, UI-компоненти, API-сервіси)"]
-        direction TB
-    end
-
-    App --> Pages
-    Pages --> Widgets
-    Widgets --> Features
-    Features --> Entities
-    Entities --> Shared
+    style App fill:#f3f4f6,stroke:#374151,stroke-width:2px,color:#111827
+    style Pages fill:#e5e7eb,stroke:#374151,stroke-width:2px,color:#111827
+    style Widgets fill:#d1d5db,stroke:#374151,stroke-width:2px,color:#111827
+    style Features fill:#9ca3af,stroke:#374151,stroke-width:2px,color:#111827
+    style Entities fill:#6b7280,stroke:#374151,stroke-width:2px,color:#ffffff
+    style Shared fill:#4b5563,stroke:#374151,stroke-width:2px,color:#ffffff
