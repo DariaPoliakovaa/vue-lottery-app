@@ -16,6 +16,12 @@ const router = createRouter({
       component: () => import('@/views/AboutView.vue'),
       meta: { title: 'Про автора | Vue Lottery' }
     },
+        {
+      path: '/lottery',
+      name: 'lottery',
+      component: () => import('@/views/LotteryView.vue'),
+      meta: { title: 'Лотерея | Vue Lottery', requiresAuth: true }
+    },
     {
       path: '/users',
       name: 'users',

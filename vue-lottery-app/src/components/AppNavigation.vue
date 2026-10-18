@@ -14,6 +14,14 @@ const authStore = useAuthStore()
     <RouterLink to="/about" class="text-gray-500 hover:text-primary transition-colors font-medium" active-class="text-primary font-bold border-b-2 border-primary pb-1">
       About author
     </RouterLink>
+
+        <RouterLink 
+      to="/lottery" 
+      class="text-gray-500 hover:text-primary transition-colors font-medium"
+      active-class="text-primary font-bold border-b-2 border-primary pb-1"
+    >
+      Lottery
+    </RouterLink>
     
     <RouterLink v-if="authStore.isAuthenticated" to="/users" class="text-gray-500 hover:text-primary transition-colors font-medium" active-class="text-primary font-bold border-b-2 border-primary pb-1">
       Users
