@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useToast } from 'primevue/usetoast'
 import { useUsersStore } from '@/entities/user'
 import type { Participant } from '@/entities/user'
 import { WinnersBlock } from '@/widgets/users-table'
@@ -11,6 +12,7 @@ import { EditParticipantForm } from '@/features/user-form'
 import AppButton from '@/shared/ui/AppButton.vue'
 
 const usersStore = useUsersStore()
+const toast = useToast()
 const { users: storeUsers, isLoading, error } = storeToRefs(usersStore)
 
 const participants = computed<Participant[]>(() => {
@@ -32,7 +34,11 @@ onMounted(async () => {
     winnerIds.value = JSON.parse(savedWinners)
   }
 
-  await usersStore.fetchUsers({ limit: 15 })
+  try {
+    await usersStore.fetchUsers({ limit: 15 })
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Помилка мережі', detail: 'Не вдалося завантажити учасників', life: 3000 })
+  }
 })
 
 watch(winnerIds, (newVal) => {
@@ -48,6 +54,7 @@ const currentWinners = computed<Participant[]>(() => {
 const handleAddWinner = (winner: Participant) => {
   if (!winnerIds.value.includes(winner.id)) {
     winnerIds.value.push(winner.id)
+    toast.add({ severity: 'success', summary: 'Переможець!', detail: `Додано переможця: ${winner.name}`, life: 2500 })
   }
 }
 
@@ -108,6 +115,8 @@ const confirmDelete = () => {
     const idToDelete = participantToDelete.value.id
     usersStore.removeUser(idToDelete)
     winnerIds.value = winnerIds.value.filter(id => id !== idToDelete)
+    
+    toast.add({ severity: 'info', summary: 'Видалено', detail: 'Учасника успішно видалено', life: 3000 })
   }
   isDeleteModalOpen.value = false
   participantToDelete.value = null
@@ -124,6 +133,7 @@ const openEditModal = (participant: Participant) => {
 const saveEdit = (updatedParticipant: Participant) => {
   isEditModalOpen.value = false
   participantToEdit.value = null
+  toast.add({ severity: 'success', summary: 'Оновлено', detail: 'Дані успішно оновлено', life: 3000 })
 }
 </script>
 
@@ -165,8 +175,8 @@ const saveEdit = (updatedParticipant: Participant) => {
         Ви дійсно бажаєте видалити учасника <strong>{{ participantToDelete.name }}</strong>?
       </p>
       <template #footer>
-        <AppButton variant="secondary" @click="isDeleteModalOpen = false">Ні</AppButton>
-        <AppButton variant="danger" @click="confirmDelete">Так</AppButton>
+        <AppButton variant="outlined" severity="secondary" @click="isDeleteModalOpen = false">Ні</AppButton>
+        <AppButton severity="danger" @click="confirmDelete">Так</AppButton>
       </template>
     </AppModal>
 

@@ -60,7 +60,7 @@ onMounted(async () => {
       </div>
 
       <div class="mt-8 flex justify-end gap-3 pt-6 border-t">
-        <AppButton variant="secondary" @click="router.push(`/users/${user.id}/edit`)">Редагувати</AppButton>
+        <AppButton variant="outlined" severity="secondary" @click="router.push(`/users/${user.id}/edit`)">Редагувати</AppButton>
       </div>
     </div>
   </div>

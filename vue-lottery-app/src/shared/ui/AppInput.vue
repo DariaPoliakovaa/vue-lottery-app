@@ -1,32 +1,30 @@
 <script setup lang="ts">
+import InputText from 'primevue/inputtext'
+
 defineProps<{
+  modelValue: string | number
   label?: string
+  error?: string
   type?: string
   placeholder?: string
-  error?: string
+  id?: string
 }>()
 
-const modelValue = defineModel<string | number>()
+defineEmits(['update:modelValue'])
 </script>
 
 <template>
   <div class="flex flex-col gap-1 w-full">
-    <label v-if="label" class="text-sm font-semibold text-gray-700">
-      {{ label }}
-    </label>
-    
-    <input
-      v-model="modelValue"
+    <label v-if="label" :for="id" class="text-sm font-medium text-gray-700">{{ label }}</label>
+    <InputText
+      :id="id"
+      :modelValue="modelValue"
+      @update:modelValue="$emit('update:modelValue', $event)"
       :type="type || 'text'"
       :placeholder="placeholder"
-      class="border rounded-md px-3 py-2 outline-none transition-colors"
-      :class="[
-        error 
-          ? 'border-red-500 focus:border-red-500' 
-          : 'border-gray-300 focus:border-primary'
-      ]"
+      :class="{ 'p-invalid': error }"
+      class="w-full"
     />
-    
-    <span v-if="error" class="text-xs text-red-500">{{ error }}</span>
+    <small v-if="error" class="text-red-500 text-xs">{{ error }}</small>
   </div>
 </template>

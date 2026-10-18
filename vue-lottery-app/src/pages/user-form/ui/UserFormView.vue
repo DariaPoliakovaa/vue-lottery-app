@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
+import { useToast } from 'primevue/usetoast'
 import { useUsersStore } from '@/entities/user'
 import AppInput from '@/shared/ui/AppInput.vue'
 import AppButton from '@/shared/ui/AppButton.vue'
@@ -11,6 +12,8 @@ import type { CreateUserDto } from '@/entities/user'
 const usersStore = useUsersStore()
 const route = useRoute()
 const router = useRouter()
+const toast = useToast()
+
 const isEditMode = ref(false)
 const isLoading = ref(false)
 const userId = ref<number | null>(null)
@@ -62,7 +65,7 @@ onMounted(async () => {
         })
       }
     } catch (e) {
-      alert('Помилка завантаження користувача')
+      toast.add({ severity: 'error', summary: 'Помилка', detail: 'Не вдалося завантажити користувача', life: 3000 })
       router.back()
     }
   }
@@ -73,13 +76,15 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     if (isEditMode.value && userId.value) {
       await usersStore.updateUser(userId.value, values)
+      toast.add({ severity: 'success', summary: 'Оновлено', detail: 'Дані користувача успішно оновлено!', life: 3000 })
     } else {
       await usersStore.createUser(values)
+      toast.add({ severity: 'success', summary: 'Створено', detail: 'Нового користувача успішно створено!', life: 3000 })
     }
     
     router.push('/users')
   } catch (error) {
-    alert('Помилка при збереженні')
+    toast.add({ severity: 'error', summary: 'Помилка', detail: 'Не вдалося зберегти дані', life: 3000 })
   } finally {
     isLoading.value = false
   }
@@ -114,7 +119,7 @@ const onSubmit = handleSubmit(async (values) => {
         <AppInput v-model="phone" label="Телефон" :error="phoneError" />
 
         <div class="col-span-1 md:col-span-2 flex justify-end gap-3 mt-4">
-          <AppButton variant="secondary" @click="router.push('/users')">Скасувати</AppButton>
+          <AppButton variant="outlined" severity="secondary" @click="router.push('/users')">Скасувати</AppButton>
           <AppButton type="submit" :disabled="isLoading">
             {{ isLoading ? 'Збереження...' : (isEditMode ? 'Оновити' : 'Створити') }}
           </AppButton>

@@ -1,26 +1,28 @@
 <script setup lang="ts">
+import Button from 'primevue/button'
+
 defineProps<{
+  label?: string
+  icon?: string
+  severity?: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'help' | 'contrast'
+  variant?: 'text' | 'outlined' | 'link'
+  loading?: boolean
   type?: 'button' | 'submit' | 'reset'
-  disabled?: boolean
-  variant?: 'primary' | 'secondary' | 'danger'
 }>()
+
+defineEmits(['click'])
 </script>
 
 <template>
-  <button
-    :type="type || 'button'"
-    :disabled="disabled"
-    class="px-4 py-2 rounded-md font-medium transition-colors duration-200 text-sm"
-    :class="[
-      disabled 
-        ? 'bg-gray-disabled text-gray-500 cursor-not-allowed' 
-        : variant === 'secondary' 
-          ? 'bg-gray-light text-gray-700 hover:bg-gray-200'
-          : variant === 'danger'
-            ? 'bg-red-500 text-white hover:bg-red-600'
-            : 'bg-primary text-white hover:bg-primary-hover'
-    ]"
+  <Button 
+    :label="label" 
+    :icon="icon" 
+    :severity="severity" 
+    :variant="variant"
+    :loading="loading"
+    :type="type"
+    @click="$emit('click', $event)"
   >
     <slot />
-  </button>
+  </Button>
 </template>

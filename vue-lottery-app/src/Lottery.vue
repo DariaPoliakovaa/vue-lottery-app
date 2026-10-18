@@ -160,8 +160,8 @@ const saveEdit = (updatedParticipant: Participant) => {
         Ви дійсно бажаєте видалити учасника <strong>{{ participantToDelete.name }}</strong>, {{ participantToDelete.email }}?
       </p>
       <template #footer>
-        <AppButton variant="secondary" @click="isDeleteModalOpen = false">Ні</AppButton>
-        <AppButton variant="danger" @click="confirmDelete">Так</AppButton>
+        <AppButton variant="outlined" severity="secondary" @click="isDeleteModalOpen = false">Ні</AppButton>
+        <AppButton severity="danger" @click="confirmDelete">Так</AppButton>
       </template>
     </AppModal>
 

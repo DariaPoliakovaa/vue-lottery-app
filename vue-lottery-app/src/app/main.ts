@@ -1,17 +1,27 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-import App from './App.vue'
-import router from './providers/router'
-import { registerServices } from './providers/services'
-import '@/app/styles/main.scss'
+import PrimeVue from 'primevue/config'
+import Aura from '@primevue/themes/aura'
+import ToastService from 'primevue/toastservice'
+import ConfirmationService from 'primevue/confirmationservice'
 
-registerServices()
+import App from './App.vue'
+import router from './providers/router/index.ts'
+import './style.css'
 
 const app = createApp(App)
-const pinia = createPinia()
-pinia.use(piniaPluginPersistedstate)
 
-app.use(pinia)
+app.use(createPinia())
 app.use(router)
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura,
+        options: {
+            darkModeSelector: '.my-app-dark', 
+        }
+    }
+})
+app.use(ToastService)
+app.use(ConfirmationService)
+
 app.mount('#app')
