@@ -138,13 +138,13 @@ const saveEdit = (updatedParticipant: Participant) => {
 </script>
 
 <template>
-  <div class="min-h-screen py-6 px-4">
+  <div class="min-h-screen py-6 px-4 bg-gray-50 dark:bg-gray-950 transition-colors">
     <div class="max-w-4xl mx-auto space-y-8">
       
-      <h1 class="text-3xl font-bold text-center text-primary mb-8">Лотерея серед користувачів API</h1>
+      <h1 class="text-3xl font-bold text-center text-primary dark:text-indigo-400 mb-8">Лотерея серед користувачів API</h1>
       
-      <div v-if="isLoading" class="text-center py-12 text-gray-500">Завантаження учасників лотереї...</div>
-      <div v-else-if="error" class="text-center py-12 text-red-500">{{ error }}</div>
+      <div v-if="isLoading" class="text-center py-12 text-gray-500 dark:text-gray-400">Завантаження учасників лотереї...</div>
+      <div v-else-if="error" class="text-center py-12 text-red-500 dark:text-red-400">{{ error }}</div>
 
       <template v-else>
         <WinnersBlock 
@@ -155,7 +155,7 @@ const saveEdit = (updatedParticipant: Participant) => {
         />
 
         <div>
-          <h2 class="text-xl font-bold text-gray-800 mb-4">Учасники</h2>
+          <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Учасники</h2>
           <SearchBar @filter-by-name="handleFilter" />
           <ParticipantsTable 
             :participants="processedParticipants"
@@ -171,8 +171,8 @@ const saveEdit = (updatedParticipant: Participant) => {
     </div>
 
     <AppModal :is-open="isDeleteModalOpen" title="Підтвердження видалення" @close="isDeleteModalOpen = false">
-      <p v-if="participantToDelete" class="text-gray-600">
-        Ви дійсно бажаєте видалити учасника <strong>{{ participantToDelete.name }}</strong>?
+      <p v-if="participantToDelete" class="text-gray-600 dark:text-gray-300">
+        Ви дійсно бажаєте видалити учасника <strong class="text-gray-900 dark:text-white">{{ participantToDelete.name }}</strong>?
       </p>
       <template #footer>
         <AppButton variant="outlined" severity="secondary" @click="isDeleteModalOpen = false">Ні</AppButton>

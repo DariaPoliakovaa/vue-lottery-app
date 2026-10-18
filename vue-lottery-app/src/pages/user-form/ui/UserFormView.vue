@@ -92,12 +92,12 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6 relative my-8">
+  <div class="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4 overflow-y-auto transition-colors">
+    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-2xl p-6 relative my-8 border border-gray-100 dark:border-gray-800 transition-colors">
       
-      <button @click="router.push('/users')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-xl font-bold">✕</button>
+      <button @click="router.push('/users')" class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white text-xl font-bold transition-colors">✕</button>
       
-      <h2 class="text-2xl font-bold mb-6">{{ isEditMode ? 'Редагувати користувача' : 'Створити користувача' }}</h2>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{{ isEditMode ? 'Редагувати користувача' : 'Створити користувача' }}</h2>
 
       <form @submit.prevent="onSubmit" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <AppInput v-model="firstName" label="Ім'я" :error="firstNameError" />
@@ -108,12 +108,12 @@ const onSubmit = handleSubmit(async (values) => {
         <AppInput v-model="age" type="number" label="Вік" :error="ageError" />
         
         <div class="flex flex-col gap-1 w-full">
-          <label class="text-sm font-semibold text-gray-700">Стать</label>
-          <select v-model="gender" class="border rounded-md px-3 py-2 outline-none border-gray-300 focus:border-primary">
+          <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Стать</label>
+          <select v-model="gender" class="border rounded-md px-3 py-2 outline-none border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:border-primary dark:focus:border-indigo-400 transition-colors">
             <option value="male">Чоловіча</option>
             <option value="female">Жіноча</option>
           </select>
-          <span v-if="genderError" class="text-xs text-red-500">{{ genderError }}</span>
+          <span v-if="genderError" class="text-xs text-red-500 dark:text-red-400">{{ genderError }}</span>
         </div>
 
         <AppInput v-model="phone" label="Телефон" :error="phoneError" />

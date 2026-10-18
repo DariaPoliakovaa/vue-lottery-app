@@ -6,9 +6,9 @@ import type { AuthResponse, LoginCredentials } from '@/entities/session/model/ty
 import { useRouter } from 'vue-router'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<Partial<AuthResponse> | null>(JSON.parse(localStorage.getItem('user') || 'null'))
-  const accessToken = ref<string | null>(localStorage.getItem('access_token'))
-  const refreshToken = ref<string | null>(localStorage.getItem('refresh_token'))
+  const user = ref<Partial<AuthResponse> | null>(null)
+  const accessToken = ref<string | null>(null)
+  const refreshToken = ref<string | null>(null)
   const router = useRouter()
 
   const isAuthenticated = computed(() => !!accessToken.value)
@@ -20,21 +20,17 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = data
     accessToken.value = data.accessToken
     refreshToken.value = data.refreshToken
-
-    localStorage.setItem('user', JSON.stringify(data))
-    localStorage.setItem('access_token', data.accessToken)
-    localStorage.setItem('refresh_token', data.refreshToken)
   }
 
   function logout() {
     user.value = null
     accessToken.value = null
     refreshToken.value = null
-    localStorage.removeItem('user')
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
+    
     router.push('/login')
   }
 
   return { user, accessToken, refreshToken, isAuthenticated, login, logout }
+}, {
+  persist: true 
 })

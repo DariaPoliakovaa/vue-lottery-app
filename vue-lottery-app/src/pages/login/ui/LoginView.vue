@@ -40,10 +40,10 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto mt-12 bg-white p-8 rounded-lg shadow-sm border border-gray-100">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Вхід в систему</h1>
+  <div class="max-w-md mx-auto mt-12 bg-white dark:bg-gray-900 p-8 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">Вхід в систему</h1>
     
-    <div v-if="authError" class="mb-4 p-3 bg-red-50 text-red-600 rounded-md text-sm text-center">
+    <div v-if="authError" class="mb-4 p-3 bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 rounded-md text-sm text-center border border-red-200 dark:border-red-900">
       {{ authError }}
     </div>
 
@@ -54,7 +54,7 @@ const onSubmit = handleSubmit(async (values) => {
       <AppButton type="submit" class="w-full mt-4">Увійти</AppButton>
     </form>
     
-    <p class="mt-4 text-xs text-gray-400 text-center">
+    <p class="mt-4 text-xs text-gray-400 dark:text-gray-500 text-center">
       Тестовий доступ: emilys / emilyspass
     </p>
   </div>
