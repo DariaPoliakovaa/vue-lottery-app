@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/app/layouts/AppLayout.vue'
 import Toast from 'primevue/toast'
-import { useThemeStore } from '@/entities/session/model/theme.store'
+import { useThemeStore } from '@/entities/session';
 const themeStore = useThemeStore()
 </script>
 

@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 
 export const useThemeStore = defineStore('theme', () => {
-  // Перевіряємо початковий стан із localStorage або клас на html, щоб стан не скидався
   const savedTheme = localStorage.getItem('theme')
   const initialDark = savedTheme 
     ? savedTheme === 'dark' 

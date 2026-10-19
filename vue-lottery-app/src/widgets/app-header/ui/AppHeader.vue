@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Logo from './Logo.vue'
 import AppNavigation from './AppNavigation.vue'
-import { useThemeStore } from '@/entities/session/model/theme.store'
+import { useThemeStore } from '@/entities/session'
 import AppButton from '@/shared/ui/AppButton.vue'
 
 const themeStore = useThemeStore()
@@ -13,7 +13,7 @@ const themeStore = useThemeStore()
       <Logo />
       <AppNavigation />
       <AppButton variant="outlined" severity="secondary" @click="themeStore.toggleTheme">
-         {{ themeStore.isDark ? '☀️ Світла тема' : '🌙 Темна тема' }}
+         {{ themeStore.isDark ? 'Світла тема' : 'Темна тема' }}
       </AppButton>
     </div>
   </header>
